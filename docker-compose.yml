@@ -2,9 +2,12 @@ version: '3.4'
 
 services:
   pong-server:
-    build: server
+    image: node:18-alpine
     ports:
       - "3000:3000"
+    volumes:
+      - ./server:/app
+    working_dir: /app
     environment:
       JWT_SECRET: jphamisgod
       DATASOURCE_HOST: postgres
@@ -12,6 +15,18 @@ services:
       DATASOURCE_USERNAME: jpham
       DATASOURCE_PASSWORD: jpham005
       DATASOURCE_DATABASE: transcendence
+    command: yarn start:dev
+    
+  pong-web:
+    image: node:18-alpine
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./web:/app
+    working_dir: /app
+    environment:
+      API_SERVER_HOST: pong-server
+    command: yarn start
 
   postgres:
     image: postgres
