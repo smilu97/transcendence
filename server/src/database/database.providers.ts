@@ -49,5 +49,5 @@ export const databaseProviders: Provider[] = [
     useFactory: async () => {
       return new DataSource(readDataSourceOptions()).initialize();
     },
-  },
+  }
 ];

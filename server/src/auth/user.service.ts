@@ -1,29 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { User } from 'src/database/auth/user.entity';
-import { DataSource } from 'typeorm';
+import { UserDetail } from 'src/database/auth/user_detail.entity';
+import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
-    constructor(private dataSource: DataSource) {}
+    constructor(
+        @Inject('USER_REPOSITORY') private userRepo: Repository<User>,
+        @Inject('USER_DETAIL_REPOSITORY') private userDetailRepo: Repository<UserDetail>,
+    ) {}
 
     async getById(id: string): Promise<User> {
-        const userRepo = this.dataSource.getRepository(User);
-        return await userRepo.findOneBy({ id });
+        return await this.userRepo.findOneBy({ id });
     }
 
     async getByUserName(username: string): Promise<User> {
-        const userRepo = this.dataSource.getRepository(User);
-        return await userRepo.findOneBy({ username });
+        return await this.userRepo.findOneBy({ username });
     }
 
     async create(username: string, password: string): Promise<boolean> {
-        const userRepo = this.dataSource.getRepository(User);
-
-        if (await userRepo.findOneBy({ username })) {
+        if (await this.userRepo.findOneBy({ username })) {
             return false;
         }
 
-        await userRepo.create({ username, password });
+        const detail = await this.userDetailRepo.save(new UserDetail());
+
+        const user = new User();
+        user.username = username;
+        user.password = password;
+        user.detail = detail;
+
+        await this.userRepo.save(user);
+
         return true;
     }
 }

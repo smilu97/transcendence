@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import { Body, Controller, Post } from '@nestjs/common';
 import { BasicLoginDto } from './dto/basic-login.dto';
 import { UserService } from './user.service';
