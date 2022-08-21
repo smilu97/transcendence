@@ -6,6 +6,7 @@ import { DataSource, Repository } from 'typeorm';
 @Injectable()
 export class UserService {
     constructor(
+        @Inject('DATA_SOURCE') private dataSource: DataSource,
         @Inject('USER_REPOSITORY') private userRepo: Repository<User>,
         @Inject('USER_DETAIL_REPOSITORY') private userDetailRepo: Repository<UserDetail>,
     ) {}
@@ -23,14 +24,16 @@ export class UserService {
             return false;
         }
 
-        const detail = await this.userDetailRepo.save(new UserDetail());
+        await this.dataSource.manager.transaction(async em => {
+            const detail = new UserDetail();
+            await em.save(detail);
 
-        const user = new User();
-        user.username = username;
-        user.password = password;
-        user.detail = detail;
-
-        await this.userRepo.save(user);
+            const user = new User();
+            user.username = username;
+            user.password = password;
+            user.detail = detail;
+            await em.save(user);
+        });
 
         return true;
     }
