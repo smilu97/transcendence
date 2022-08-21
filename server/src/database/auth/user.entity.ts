@@ -1,4 +1,5 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { UserDetail } from "./user_detail.entity";
 
 @Entity()
 export class User {
@@ -11,4 +12,8 @@ export class User {
 
     @Column({ length: 128 })
     password: string;
+
+    @OneToOne(() => UserDetail)
+    @JoinColumn()
+    detail: UserDetail;
 }

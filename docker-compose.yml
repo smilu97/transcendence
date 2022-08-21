@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  pong-server:
+    build: server
+    ports:
+      - "3000:3000"
+    environment:
+      JWT_SECRET: jphamisgod
+      DATASOURCE_HOST: postgres
+      DATASOURCE_PORT: 5432
+      DATASOURCE_USERNAME: jpham
+      DATASOURCE_PASSWORD: jpham005
+      DATASOURCE_DATABASE: transcendence
+
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: jpham005
+      POSTGRES_USER: jpham
+      POSTGRES_DB: transcendence
+    volumes:
+      - ./server/init-postgres:/docker-entrypoint-initdb.d
+      - postgres-data:/var/lib/postgresql/data
+volumes:
+  postgres-data:
