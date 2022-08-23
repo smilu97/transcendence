@@ -1,10 +1,19 @@
-import * as jwt from 'jsonwebtoken';
-import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Request, UseGuards } from '@nestjs/common';
 import { BasicLoginDto } from './dto/basic-login.dto';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+class UserProfile {
+    @ApiProperty()
+    id: string;
+    
+    @ApiProperty()
+    username: string;
+}
+
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
     constructor(
@@ -13,6 +22,8 @@ export class AuthController {
     ) {}
 
     @Post('/login/basic')
+    @HttpCode(200)
+    @ApiOkResponse({ description: 'Successful login' })
     async login(@Body() body: BasicLoginDto): Promise<string> {
         const { username, password } = body;
         const user = await this.userService.getByUserName(username);
@@ -22,15 +33,18 @@ export class AuthController {
     }
 
     @Post('/signup/basic')
+    @HttpCode(201)
+    @ApiCreatedResponse({ description: 'Created new user' })
     async doSignupBasic(@Body() body: BasicLoginDto): Promise<void> {
         const { username, password } = body;
         await this.userService.create(username, password);
     }
 
-    @UseGuards(JwtAuthGuard)
     @Get('profile')
-    getProfile(@Request() req) {
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @ApiOkResponse({ status: 200, type: UserProfile })
+    getProfile(@Request() req): UserProfile {
         return req.user;
-    }
-    
+    } 
 }
