@@ -1,17 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { User } from 'src/database/auth/user.entity';
 import { UserDetail } from 'src/database/auth/user_detail.entity';
+import { UuidService } from 'src/database/snowflake.service';
 import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
     constructor(
+        private uuidService: UuidService,
         @Inject('DATA_SOURCE') private dataSource: DataSource,
         @Inject('USER_REPOSITORY') private userRepo: Repository<User>,
         @Inject('USER_DETAIL_REPOSITORY') private userDetailRepo: Repository<UserDetail>,
     ) {}
 
-    async getById(id: string): Promise<User> {
+    async getById(id: number): Promise<User> {
         return await this.userRepo.findOneBy({ id });
     }
 
@@ -26,9 +28,11 @@ export class UserService {
 
         await this.dataSource.manager.transaction(async em => {
             const detail = new UserDetail();
+            detail.id = this.uuidService.id();
             await em.save(detail);
 
             const user = new User();
+            user.id = this.uuidService.id();
             user.username = username;
             user.password = password;
             user.detail = detail;

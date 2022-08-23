@@ -7,7 +7,7 @@ import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiProperty, ApiRespo
 
 class UserProfile {
     @ApiProperty()
-    id: string;
+    id: number;
     
     @ApiProperty()
     username: string;

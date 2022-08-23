@@ -1,9 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity()
 export class UserDetail {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @PrimaryColumn()
+    id: number;
 
     @Column({ length: 500 })
     description: string;

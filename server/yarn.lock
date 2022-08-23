@@ -4421,6 +4421,11 @@ slash@^3.0.0:
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
 
+snowflake-uuid@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/snowflake-uuid/-/snowflake-uuid-1.0.0.tgz#b656c89f7e9c9660a64d7a2977e627b1556f4a71"
+  integrity sha512-Y8Wj4ota0NgqXm2mhQ+lIWQQbUekkZYVlwXDGMmOpEhH4BfNVnCfDTqboeo0N+BFBN2FhRSaUWXLZBk4ngiImA==
+
 source-map-support@0.5.13:
   version "0.5.13"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.13.tgz#31b24a9c2e73c2de85066c0feb7d44767ed52932"

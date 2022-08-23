@@ -1,10 +1,10 @@
-import { Column, Entity, Index, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
 import { UserDetail } from "./user_detail.entity";
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @PrimaryColumn()
+    id: number;
 
     @Column({ length: 32 })
     @Index()
