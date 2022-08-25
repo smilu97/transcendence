@@ -12,6 +12,7 @@ async function bootstrap() {
     .setTitle('Pong')
     .setVersion('0.0.1')
     .addTag('auth', 'Authentication')
+    .addTag('chat', 'Chatting')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);

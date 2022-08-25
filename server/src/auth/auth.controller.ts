@@ -1,9 +1,9 @@
 import { Body, Controller, Get, HttpCode, Post, Request, UseGuards } from '@nestjs/common';
-import { BasicLoginDto } from './dto/basic-login.dto';
+import { BasicLoginDto } from './dto/basicLogin.dto';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';
-import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiProperty, ApiTags } from '@nestjs/swagger';
 
 class UserProfile {
     @ApiProperty()

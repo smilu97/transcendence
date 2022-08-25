@@ -1,8 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { User } from 'src/database/auth/user.entity';
-import { UserDetail } from 'src/database/auth/user_detail.entity';
-import { UuidService } from 'src/database/snowflake.service';
 import { DataSource, Repository } from 'typeorm';
+
+import { UuidService } from 'src/database/snowflake.service';
+
+import { User } from './entity/user.entity';
+import { UserDetail } from './entity/userDetail.entity';
 
 @Injectable()
 export class UserService {
@@ -26,7 +28,7 @@ export class UserService {
             return false;
         }
 
-        await this.dataSource.manager.transaction(async em => {
+        await this.dataSource.manager.transaction('READ COMMITTED', async em => {
             const detail = new UserDetail();
             detail.id = this.uuidService.id();
             await em.save(detail);

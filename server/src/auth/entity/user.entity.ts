@@ -1,5 +1,5 @@
 import { Column, Entity, Index, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
-import { UserDetail } from "./user_detail.entity";
+import { UserDetail } from "./userDetail.entity";
 
 @Entity()
 export class User {

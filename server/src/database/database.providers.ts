@@ -38,7 +38,7 @@ function readDataSourceOptions(): DataSourceOptions {
     database,
     synchronize: false,
     entities: [
-      __dirname + '/**/*.entity{.ts,.js}',
+      __dirname + '/../**/*.entity{.ts,.js}',
     ],
   }
 }

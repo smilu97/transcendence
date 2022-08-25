@@ -22,7 +22,7 @@ create table "ext_auth" (
 
 create index "idx_ext_id" on "ext_auth" using hash ("extId");
 
-create table "userHealth" (
+create table "user_health" (
     "userId" bigint not null primary key,
     "content" varchar(16) not null,
     "timestamp" bigint not null
@@ -30,9 +30,9 @@ create table "userHealth" (
 
 create table "chat_channel" (
     "id" bigint primary key,
+    "ownerId" bigint not null,
     "type" varchar(8) not null,
     "name" varchar(32) not null,
-    "owner" bigint not null,
     "password" varchar(32) not null
 );
 
@@ -40,7 +40,7 @@ create table "chat_message" (
     "id" bigint primary key,
     "channelId" bigint not null references "chat_channel" ("id")
         on delete cascade,
-    "authorId" bigint,
+    "authorId" bigint not null,
     "content" varchar(128) not null,
     "createdAt" bigint not null
 );
