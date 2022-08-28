@@ -21,13 +21,11 @@ services:
   pong-web:
     image: node:18-alpine
     ports:
-      - "${WEB_PORT}:3000"
+      - "${WEB_PORT}:5173"
     volumes:
       - ./web:/app
     working_dir: /app
-    environment:
-      API_SERVER_HOST: pong-server
-    command: yarn start
+    command: sh -c "yarn install ; yarn dev --host=0.0.0.0"
 
   postgres:
     image: postgres

@@ -3,7 +3,7 @@ import { databaseProviders } from './database.providers';
 import { UuidService } from './snowflake.service';
 
 @Module({
-    providers: [...databaseProviders, UuidService],
-    exports: [...databaseProviders, UuidService],
+  providers: [...databaseProviders, UuidService],
+  exports: [...databaseProviders, UuidService],
 })
 export class DatabaseModule {}

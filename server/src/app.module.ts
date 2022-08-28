@@ -6,12 +6,7 @@ import { ChatModule } from './chat/chat.module';
 import { DatabaseModule } from './database/database.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    AuthModule,
-    DatabaseModule,
-    ChatModule,
-  ],
+  imports: [ConfigModule.forRoot(), AuthModule, DatabaseModule, ChatModule],
   controllers: [AppController],
   providers: [],
 })

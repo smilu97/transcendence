@@ -2,7 +2,7 @@ import { Provider } from '@nestjs/common';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
 class DataSourceConfigError extends Error {
-  constructor (message) {
+  constructor(message) {
     super(message);
     this.name = 'DataSourceConfigError';
   }
@@ -15,7 +15,7 @@ function validateNonNull(value: string, name: string) {
 }
 
 function readDataSourceOptions(): DataSourceOptions {
-  const  {
+  const {
     DATASOURCE_HOST: host,
     DATASOURCE_PORT: port,
     DATASOURCE_USERNAME: username,
@@ -29,6 +29,13 @@ function readDataSourceOptions(): DataSourceOptions {
   validateNonNull(password, 'password');
   validateNonNull(database, 'database');
 
+  console.log('PostgreSQL configs:', {
+    host,
+    port,
+    username,
+    database,
+  });
+
   return {
     type: 'postgres',
     port: Number.parseInt(port),
@@ -37,10 +44,8 @@ function readDataSourceOptions(): DataSourceOptions {
     password,
     database,
     synchronize: false,
-    entities: [
-      __dirname + '/../**/*.entity{.ts,.js}',
-    ],
-  }
+    entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  };
 }
 
 export const databaseProviders: Provider[] = [
@@ -49,5 +54,5 @@ export const databaseProviders: Provider[] = [
     useFactory: async () => {
       return new DataSource(readDataSourceOptions()).initialize();
     },
-  }
+  },
 ];
