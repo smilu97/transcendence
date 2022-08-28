@@ -11,16 +11,16 @@ import { JwtStrategy } from './jwt.strategy';
 import { UserService } from './user.service';
 
 @Module({
-    imports: [
-        DatabaseModule,
-        PassportModule,
-        JwtModule.register({
-            secret: process.env.JWT_SECRET || 'default',
-            signOptions: { expiresIn: '120d' },
-        }),
-    ],
-    controllers: [AuthController],
-    providers: [AuthService, UserService, JwtStrategy, ...authRepositories],
-    exports: [...authRepositories, AuthService],
+  imports: [
+    DatabaseModule,
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET || 'default',
+      signOptions: { expiresIn: '120d' },
+    }),
+  ],
+  controllers: [AuthController],
+  providers: [AuthService, UserService, JwtStrategy, ...authRepositories],
+  exports: [...authRepositories, AuthService],
 })
 export class AuthModule {}
