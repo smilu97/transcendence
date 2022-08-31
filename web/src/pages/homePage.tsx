@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuthGuard, usePong } from '../../client';
+import { useAuthGuard, usePong } from '../client';
 
 export default function HomePage() {
   useAuthGuard();
@@ -16,17 +16,17 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="bg-black w-screen h-screen">
-      <div className="flex flex-col items-start p-8">
-        <h1 className="text-white">{JSON.stringify(profile)}</h1>
+    <div className='bg-black w-screen h-screen'>
+      <div className='flex flex-col items-start p-8'>
+        <h1 className='text-white'>{JSON.stringify(profile)}</h1>
         <button
           onClick={logout}
-          className="bg-gray-900 text-white text-3xl m-4 p-4 rounded-xl transition-colors hover:bg-teal-300 hover:text-black"
+          className='bg-gray-900 text-white text-3xl m-4 p-4 rounded-xl transition-colors hover:bg-teal-300 hover:text-black'
         >
           Logout
         </button>
-        <Link to="/chat">
-          <button className="bg-gray-900 text-white text-3xl m-4 p-4 rounded-xl transition-colors hover:bg-teal-300 hover:text-black">
+        <Link to='/chat'>
+          <button className='bg-gray-900 text-white text-3xl m-4 p-4 rounded-xl transition-colors hover:bg-teal-300 hover:text-black'>
             Chat
           </button>
         </Link>

@@ -11,12 +11,12 @@
     "coverage": "vitest run --coveage"
   },
   "dependencies": {
+    "@stitches/react": "^1.2.8",
     "deepmerge": "^4.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "6",
     "socket.io-client": "^4.5.1",
-    "ts-di": "^2.3.0",
     "ts-essentials": "^9.3.0",
     "valtio": "^1.6.4"
   },
