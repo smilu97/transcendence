@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 
 services:
   pong-server:
@@ -17,7 +17,7 @@ services:
       DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       DATASOURCE_DATABASE: ${POSTGRES_DATABASE}
     command: yarn start:dev
-    
+
   pong-web:
     image: node:18-alpine
     ports:
@@ -25,7 +25,7 @@ services:
     volumes:
       - ./web:/app
     working_dir: /app
-    command: sh -c "yarn install ; yarn dev --host=0.0.0.0"
+    command: sh -c "yarn install ; yarn dev --host=0.0.0.0 --mode ${WEB_MODE}"
 
   postgres:
     image: postgres

@@ -4,9 +4,9 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import './index.css';
 
-import LoginPage from './routes/login';
 import ChatPage from './routes/chat';
 import HomePage from './routes/home';
+import LoginPage from './routes/login';
 import NotFoundPage from './routes/not-found';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

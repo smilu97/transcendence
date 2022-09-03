@@ -11,10 +11,3 @@ export interface ChatChannel {
   name: string;
   type: 'PUBLIC' | 'PRIVATE';
 }
-
-export interface ChatMessage {
-  id: number;
-  content: string;
-  createdAt: number;
-  authorId: number;
-}

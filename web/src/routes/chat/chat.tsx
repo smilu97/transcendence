@@ -2,7 +2,7 @@ import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { DeepReadonly } from 'ts-essentials';
 import { Link } from 'react-router-dom';
 import { ChatChannel } from '../../pong-client/chat/chat.dto';
-import { useAuthGuard, usePong } from '../../pong-client/react';
+import { useAuthGuard, usePong } from '../../client';
 
 export default function ChatPage() {
   useAuthGuard();

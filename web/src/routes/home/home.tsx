@@ -1,13 +1,17 @@
-import { useCallback } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuthGuard, usePong } from '../../pong-client/react';
+import { useAuthGuard, usePong } from '../../client';
 
 export default function HomePage() {
   useAuthGuard();
   const pong = usePong();
   const profile = pong.user.getProfile();
 
-  const logout = useCallback(async () => {
+  React.useEffect(() => {
+    pong.user.updateProfile().then(() => {});
+  }, []);
+
+  const logout = React.useCallback(async () => {
     pong.auth.logout();
   }, []);
 

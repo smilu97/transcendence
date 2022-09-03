@@ -2,27 +2,58 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { proxy, useSnapshot } from 'valtio';
 
-import { PongClient } from './pong-client';
+import { HttpPongContext, MemoryPongContext, PongContext } from './context';
 
-export const reactClient = new PongClient({
-  baseURL: import.meta.env.PONG_URL || 'http://localhost:3000',
-  wsURL: import.meta.env.PONG_WS_URL || 'ws://[::1]:3002',
-  proxyFn: proxy,
-  snapshotFn: <T extends object>(el: T) => useSnapshot(el) as any,
-});
-
-export function usePong(): PongClient {
-  return reactClient;
+export interface PongReactOptions {
+  httpURL?: string;
+  wsURL?: string;
+  contextType: 'http' | 'memory';
 }
 
-export function useAuthGuard(to = '/login') {
-  const navigate = useNavigate();
-  const pong = usePong();
-  const isLogined = pong.auth.isLogined();
+export function createPongContext(options: PongReactOptions): PongContext {
+  const { httpURL, wsURL, contextType } = options;
 
-  useEffect(() => {
-    if (!isLogined) {
-      navigate(to);
+  const proxies = {
+    proxyFn: proxy,
+    snapshotFn: <T extends object>(el: T) => useSnapshot(el) as any,
+  };
+
+  if (contextType === 'http') {
+    if (httpURL === undefined || wsURL === undefined) {
+      throw new Error('httpURL, wsURL must be providen for http-context');
     }
-  }, [isLogined]);
+
+    return new HttpPongContext({
+      baseURL: import.meta.env.PONG_URL || 'http://localhost:3000',
+      wsURL: import.meta.env.PONG_WS_URL || 'ws://[::1]:3002',
+      ...proxies,
+    });
+  } else {
+    console.log('pong client is run in-memory');
+    return new MemoryPongContext({
+      ...proxies,
+    });
+  }
+}
+
+export default function createPong(options: PongReactOptions) {
+  const context = createPongContext(options);
+
+  function usePong(): PongContext {
+    return context;
+  }
+
+  function useAuthGuard(to = '/login') {
+    const navigate = useNavigate();
+    const pong = usePong();
+    const isLogined = pong.auth.isLogined();
+
+    useEffect(() => {
+      if (!isLogined) {
+        navigate(to);
+      }
+    }, [isLogined]);
+  }
+
+  return { context, usePong, useAuthGuard };
 }

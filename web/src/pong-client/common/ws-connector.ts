@@ -8,35 +8,15 @@ export interface Health {
 export default class WsConnector {
   private readonly socket: ReturnType<typeof io>;
 
-  private healthProvider?: () => Health;
-
   constructor(url: string) {
     this.socket = io(url);
-    setInterval(() => this.pulse(), 3000);
-
-    this.socket.on('connect', () => {
-      this.pulse();
-    });
-
-    this.socket.on('disconnect', () => {
-      console.log('disconnected');
-    });
   }
 
   on(event: string, listener: (...args: any[]) => void) {
     this.socket.on(event, listener);
   }
 
-  setTokenProvider(provider?: () => Health) {
-    this.healthProvider = provider;
-  }
-
-  pulse() {
-    if (this.healthProvider) {
-      const health = this.healthProvider();
-      if (health.token) {
-        this.socket.emit('health', health);
-      }
-    }
+  pulse(token: string) {
+    this.socket.emit('health', { token });
   }
 }

@@ -1,4 +1,4 @@
-import { HttpWsDao } from '../common/dao';
+import { HttpWsDao, MemoryDao } from '../common/dao';
 import { HttpStatus } from '../common/http-status';
 import { BasicLoginError, BasicRegisterError } from './auth.error';
 
@@ -7,7 +7,15 @@ export interface RegisterParams {
   password: string;
 }
 
-export default class AuthDao extends HttpWsDao {
+export interface AuthDao {
+  getTokenByBasicAuth(username: string, password: string): Promise<string>;
+
+  register(params: RegisterParams): Promise<void>;
+
+  pulse(token: string): void;
+}
+
+export class HttpWsAuthDao extends HttpWsDao implements AuthDao {
   /**
    * @throws BasicLoginError
    */
@@ -35,7 +43,22 @@ export default class AuthDao extends HttpWsDao {
     }
   }
 
-  pulse() {
-    this.ws.pulse();
+  pulse(token: string) {
+    this.ws.pulse(token);
   }
+}
+
+export class MemoryAuthDao extends MemoryDao implements AuthDao {
+  async getTokenByBasicAuth(
+    username: string,
+    password: string,
+  ): Promise<string> {
+    return this.server.getTokenByBasicAuth(username, password);
+  }
+
+  async register({ username, password }: RegisterParams): Promise<void> {
+    this.server.register(username, password);
+  }
+
+  pulse(): void {}
 }

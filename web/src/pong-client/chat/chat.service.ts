@@ -1,5 +1,5 @@
 import { CommonServiceOptions, Service } from '../common/service';
-import ChatDao from './chat.dao';
+import { ChatDao } from './chat.dao';
 import { ChatChannel, ChatMessage } from './chat.dto';
 
 export interface ChatState {
@@ -18,7 +18,7 @@ export default class ChatService extends Service<ChatState> {
   constructor(cso: CommonServiceOptions, private chatDao: ChatDao) {
     super('auth', initialState, cso);
 
-    this.chatDao.on('newMessage', (message: ChatMessage) => {
+    this.chatDao.onNewMessage((message: ChatMessage) => {
       this.syncMessages(message.channelId);
     });
 
@@ -29,13 +29,16 @@ export default class ChatService extends Service<ChatState> {
 
   async updateChannels() {
     this.state.channels = await this.chatDao.getChannels();
-    if (this.root.auth.state.token) {
-      this.state.joinedChannels = await this.chatDao.getJoinedChannels();
+    if (this.root.shared.auth) {
+      this.state.joinedChannels = await this.chatDao.getJoinedChannels(
+        this.getHttpAuthRequired(),
+      );
     }
   }
 
   async createChannel(name: string, password?: string) {
-    await this.chatDao.createChannel(name, password);
+    const auth = this.getHttpAuthRequired();
+    await this.chatDao.createChannel(auth, name, password);
     await this.updateChannels();
   }
 
@@ -44,7 +47,8 @@ export default class ChatService extends Service<ChatState> {
   }
 
   async sendMessage(channelId: number, content: string) {
-    await this.chatDao.sendMessage(channelId, content);
+    const auth = this.getHttpAuthRequired();
+    await this.chatDao.sendMessage(auth, channelId, content);
   }
 
   selectMessage(channelId: number) {
@@ -52,14 +56,22 @@ export default class ChatService extends Service<ChatState> {
   }
 
   async joinChannel(channelId: number, password = '') {
+    const auth = this.getHttpAuthRequired();
     if (!this.isJoined(channelId)) {
-      await this.chatDao.joinChannel(channelId, password);
+      await this.chatDao.joinChannel(auth, channelId, password);
     }
-    this.state.messages[channelId] = await this.chatDao.getMessages(channelId);
+    this.state.messages[channelId] = await this.chatDao.getMessages(
+      auth,
+      channelId,
+    );
   }
 
   async syncMessages(channelId: number) {
-    this.state.messages[channelId] = await this.chatDao.getMessages(channelId);
+    const auth = this.getHttpAuthRequired();
+    this.state.messages[channelId] = await this.chatDao.getMessages(
+      auth,
+      channelId,
+    );
   }
 
   private isJoined(channelId: number): boolean {
