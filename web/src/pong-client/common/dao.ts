@@ -1,7 +1,14 @@
+import { MemoryPongServer } from '../mock';
 import HttpConnector from './http-connector';
 import WsConnector from './ws-connector';
 
+export type WsListener = (...args: any[]) => void;
+
 export interface Dao {}
+
+export abstract class MemoryDao implements Dao {
+  constructor(protected server: MemoryPongServer) {}
+}
 
 export abstract class HttpDao implements Dao {
   constructor(protected readonly http: HttpConnector) {}
@@ -10,7 +17,7 @@ export abstract class HttpDao implements Dao {
 export abstract class WsDao implements Dao {
   constructor(protected readonly ws: WsConnector) {}
 
-  on(event: string, listener: (...args: any[]) => void) {
+  protected on(event: string, listener: WsListener) {
     this.ws.on(event, listener);
   }
 }

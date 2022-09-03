@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePong } from '../../pong-client/react';
+import { usePong } from '../../client';
 
 export default function LoginPage() {
   const navigate = useNavigate();

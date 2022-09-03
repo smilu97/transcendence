@@ -1,34 +1,14 @@
 import deepmerge from 'deepmerge';
+import { HttpAuth, HttpBasicAuth, HttpBearerAuth } from '../auth';
 
 type FetchOption = RequestInit & {
-  bearerToken?: string;
-};
-
-export type HttpContext = {
-  bearerToken?: string;
-};
-
-const defaultContext: HttpContext = {
-  bearerToken: undefined,
+  auth?: HttpAuth;
 };
 
 export default class HttpConnector {
-  private contextProvider?: () => HttpContext;
-
   constructor(private baseURL: string | URL) {}
 
   fetch(url: URL | string, option: FetchOption = {}): Promise<Response> {
-    const context = this.contextProvider
-      ? this.contextProvider()
-      : defaultContext;
-
-    const bearerToken = option.bearerToken || context.bearerToken;
-    const authHeader = bearerToken
-      ? {
-          Authorization: `Bearer ${bearerToken}`,
-        }
-      : undefined;
-
     const baseInit: RequestInit = {
       method: 'GET',
       mode: 'cors',
@@ -36,7 +16,7 @@ export default class HttpConnector {
       credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json',
-        ...authHeader,
+        Authorization: this.extractAuthorization(option.auth),
       },
       redirect: 'follow',
       referrerPolicy: 'no-referrer',
@@ -68,7 +48,29 @@ export default class HttpConnector {
     return this.fetch(url, deepmerge(baseInit, init));
   }
 
-  setContextProvider(provider: () => HttpContext) {
-    this.contextProvider = provider;
+  private extractAuthorization(auth?: HttpAuth): string {
+    if (!auth) {
+      return '';
+    }
+
+    switch (auth.type) {
+      case 'basic':
+        return this.extractBasicAuthorization(auth);
+      case 'bearer':
+        return this.extractBearerAuthorization(auth);
+      default:
+        return '';
+    }
+  }
+
+  private extractBearerAuthorization(auth: HttpBearerAuth): string {
+    const { token } = auth;
+    return `Bearer ${token}`;
+  }
+
+  private extractBasicAuthorization(auth: HttpBasicAuth): string {
+    const { username, password } = auth;
+    const token = btoa(`${username}:${password}`);
+    return `Basic ${token}`;
   }
 }

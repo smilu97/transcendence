@@ -1,6 +1,6 @@
 import { Service, CommonServiceOptions } from '../common/service';
-import UserDao from './user.dao';
-import { User } from './user.vo';
+import { UserDao } from './user.dao';
+import { User } from './user.dto';
 
 export interface UserState {
   profile?: User;
@@ -14,7 +14,8 @@ export default class UserService extends Service<UserState> {
   }
 
   async updateProfile(): Promise<void> {
-    this.state.profile = await this.userDao.getProfile();
+    const auth = this.getHttpAuthRequired();
+    this.state.profile = await this.userDao.getProfile(auth);
   }
 
   getProfile() {
