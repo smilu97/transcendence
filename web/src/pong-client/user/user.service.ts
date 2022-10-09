@@ -18,7 +18,7 @@ export default class UserService extends Service<UserState> {
     this.state.profile = await this.userDao.getProfile(auth);
   }
 
-  getProfile() {
+  selectProfile() {
     return this.getSnapshot().profile;
   }
 }

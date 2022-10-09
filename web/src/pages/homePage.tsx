@@ -5,7 +5,7 @@ import { useAuthGuard, usePong } from '../client';
 export default function HomePage() {
   useAuthGuard();
   const pong = usePong();
-  const profile = pong.user.getProfile();
+  const profile = pong.user.selectProfile();
 
   React.useEffect(() => {
     pong.user.updateProfile().then(() => {});
