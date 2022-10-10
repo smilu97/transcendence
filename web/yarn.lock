@@ -1277,10 +1277,15 @@ util-deprecate@^1.0.2:
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
 
-valtio@^1.6.4:
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/valtio/-/valtio-1.6.4.tgz#ddab600cf58b54a76339ef1cc3e931f9fe6070ce"
-  integrity sha512-wEslN1bO1ihuv2Xj4jIxkGaDgsnwSvZdcaYcJ6aSwaNYU0ZMe+eZipfEzbTqd4CwnMu7ihDBNes0ZP5CIl1NqA==
+"valtio-pong@file:../valtio":
+  version "1.0.0"
+  dependencies:
+    valtio "^1.7.2"
+
+valtio@^1.6.4, valtio@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/valtio/-/valtio-1.7.2.tgz#2ec6936d3cab5b8509a30d264d41e39a77d508e6"
+  integrity sha512-JAiJQBRCGkmztwce6m1o3dUk9OHf3+CQBgEb4EmqxBdYO0s0qt8pzU+M4DtbQ+9L6dqoYxvR9m2cB/yL85gpjg==
   dependencies:
     proxy-compare "2.3.0"
     use-sync-external-store "1.2.0"

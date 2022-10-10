@@ -24,7 +24,12 @@ services:
       - "${WEB_PORT}:5173"
     volumes:
       - ./web:/app
+      - ./valtio:/valtio
     working_dir: /app
+    environment:
+      - VITE_PONG_CLIENT_TYPE=${VITE_PONG_CLIENT_TYPE}
+      - VITE_PONG_URL=${VITE_PONG_URL}
+      - VITE_PONG_WS_URL=${VITE_PONG_WS_URL}
     command: sh -c "yarn install ; yarn dev --host=0.0.0.0 --mode ${WEB_MODE}"
 
   postgres:

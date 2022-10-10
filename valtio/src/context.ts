@@ -1,5 +1,5 @@
 import HttpConnector from './common/http-connector';
-import { ProxyFn, CommonServiceOptions, SnapshotFn } from './common/service';
+import { CommonServiceOptions } from './common/service';
 import WsConnector from './common/ws-connector';
 
 import { HttpWsAuthDao, MemoryAuthDao } from './auth/auth.dao';
@@ -10,6 +10,7 @@ import AuthService, { Auth, makeBearerAuth } from './auth';
 import UserService from './user';
 import ChatService from './chat';
 import { MemoryPongServer } from './mock';
+import { proxy } from 'valtio';
 
 export interface SharedState {
   auth?: Auth;
@@ -32,8 +33,6 @@ export interface PongContext {
 export interface HttpPongContextOptions {
   baseURL: string | URL;
   wsURL: string;
-  proxyFn?: ProxyFn;
-  snapshotFn?: SnapshotFn;
 }
 
 export class HttpPongContext implements PongContext {
@@ -44,11 +43,9 @@ export class HttpPongContext implements PongContext {
   readonly shared: SharedState;
 
   constructor(options: HttpPongContextOptions) {
-    const { baseURL, wsURL, proxyFn, snapshotFn } = options;
+    const { baseURL, wsURL } = options;
 
-    this.shared = proxyFn
-      ? proxyFn(initialSharedState)
-      : { ...initialSharedState };
+    this.shared = proxy(initialSharedState);
 
     const http = new HttpConnector(baseURL);
     const ws = new WsConnector(wsURL);
@@ -57,16 +54,11 @@ export class HttpPongContext implements PongContext {
     const userDao = new HttpUserDao(http);
     const chatDao = new HttpWsChatDao(http, ws);
 
-    const cso: CommonServiceOptions = { root: this, proxyFn, snapshotFn };
+    const cso: CommonServiceOptions = { root: this };
     this.auth = new AuthService(cso, authDao);
     this.user = new UserService(cso, userDao);
     this.chat = new ChatService(cso, chatDao);
   }
-}
-
-export interface MemoryPongContextOptions {
-  proxyFn?: ProxyFn;
-  snapshotFn?: SnapshotFn;
 }
 
 export class MemoryPongContext implements PongContext {
@@ -78,20 +70,16 @@ export class MemoryPongContext implements PongContext {
 
   readonly shared: SharedState;
 
-  constructor(options: MemoryPongContextOptions) {
-    const { proxyFn, snapshotFn } = options;
-
+  constructor() {
     const mockServer = new MemoryPongServer();
 
     const authDao = new MemoryAuthDao(mockServer);
     const userDao = new MemoryUserDao(mockServer);
     const chatDao = new MemoryChatDao(mockServer);
 
-    this.shared = proxyFn
-      ? proxyFn(initialSharedState)
-      : { ...initialSharedState };
+    this.shared = proxy(initialSharedState);
 
-    const cso: CommonServiceOptions = { root: this, proxyFn, snapshotFn };
+    const cso: CommonServiceOptions = { root: this };
     this.auth = new AuthService(cso, authDao);
     this.user = new UserService(cso, userDao);
     this.chat = new ChatService(cso, chatDao);
