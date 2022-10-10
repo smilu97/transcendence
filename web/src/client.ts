@@ -1,5 +1,8 @@
+import { createPongContext, PongContext, PongReactOptions } from 'valtio-pong';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+
 import configs, { PongEnvs } from './configs';
-import createPong, { PongReactOptions } from './pong-client/react';
 
 function mapEnvs(envs: PongEnvs): PongReactOptions {
   if (envs.contextType === 'http') {
@@ -19,6 +22,28 @@ function mapEnvs(envs: PongEnvs): PongReactOptions {
       contextType: 'memory',
     };
   }
+}
+
+export default function createPong(options: PongReactOptions) {
+  const context = createPongContext(options);
+
+  function usePong(): PongContext {
+    return context;
+  }
+
+  function useAuthGuard(to = '/login') {
+    const navigate = useNavigate();
+    const pong = usePong();
+    const isLogined = pong.auth.isLogined();
+
+    useEffect(() => {
+      if (!isLogined) {
+        navigate(to);
+      }
+    }, [isLogined]);
+  }
+
+  return { context, usePong, useAuthGuard };
 }
 
 export const { context, usePong, useAuthGuard } = createPong(mapEnvs(configs));

@@ -1,0 +1,13 @@
+{
+  "name": "valtio-pong",
+  "version": "1.0.0",
+  "description": "pong client based on valtio",
+  "main": "src/index.js",
+  "repository": "https://github.com/smilu97/transcendence",
+  "author": "smilu97",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "valtio": "^1.7.2"
+  }
+}
